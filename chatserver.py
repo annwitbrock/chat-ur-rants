@@ -6,11 +6,27 @@ import os
 class ChatServer():
 
     def __init__(self):        
-        pass
+        self.chatroom = {}
         
     def action(self, args):
-        #sys.stdout.write(result)
-        pass
+        args = args.strip()
+        line = args.split(' ')
+        user = line[0]
+        if user not in self.chatroom:
+            self.chatroom[user] = []
+
+        result = ""
+        if len(line) == 1:
+            for message in self.chatroom[user]:
+                result += user + ' - ' + message[0] + os.linesep
+            return result
+        
+        if '->' in args:
+            self.chatroom[user].append((' '.join(line[2:]),))
+            return result
+                
+        return result
+
 
         
 def main():       
@@ -18,7 +34,8 @@ def main():
         chatServer = ChatServer()
         while (chatServer is not None):
             chatline = sys.stdin.readline()
-            chatServer.action(chatline)
+            messages = chatServer.action(chatline)
+            sys.stdout.write(messages)
         
     except:
         print "Unexpected error"

@@ -6,32 +6,45 @@ class TestChat(unittest.TestCase):
 
     def setUp(self):
         self.chat = ChatServer()
+        
+    def tearDown(self):
+        #self.chat.dispose()
+        self.chat = None
 
-    def test_WhenAliceHasPostedNoMessagesAliceReadsEmptyTimeline(self):
-        expected = None
+    def test_WhenAliceHasPostedNoMessagesUserReadsEmptyTimeline(self):
+        expected = ''
         actual = self.chat.action("Alice")
-        self.assertEqual(expected, actual)        
+        self.assertEqual(actual, expected)        
 
-    def test_WhenAliceHasPostedOneMessageAliceReadsOneTimelineMessage(self):
-        expected = None
-        actual = self.chat.action("Alice -> I love the weather today")
-        self.assertEqual(expected, actual)
-    
-    def test_WhenAliceHasPostedOneMessageBobReadsAlicesOneTimelineMessage(self):
+    def test_WhenAliceHasPostedOneMessageUserCanReadOneTimelineMessage(self):
+        expected = r"^Alice - I love the weather today"
+        chatline = self.chat.action("Alice -> I love the weather today")
+        actual = self.chat.action("Alice")
+        self.assertRegexpMatches(actual, expected)
+
+    @unittest.skip("not implemented")
+    def test_WhenUserReadsAliceTimelineMessageItDisplaysTimeSincePosted(self):
+        expectedtimeformat = r"\s\(.+\)$"
+        expectedtime = r"\d+\s[minute|second]+[s]*\sago"  # r"\s\(\d+\s[minute|second]+[s]*\sago\)$"
+
+        chatline = self.chat.action("Alice -> I love the weather today")
+        actual = self.chat.action("Alice")        
+        self.assertRegexpMatches(actual, expectedtimeformat)
+        self.assertRegexpMatches(actual, expectedtime)
+
+    @unittest.skip("not implemented")
+    def test_WhenBobHasPostedTwoMessagesUserReadsBobsTwoTimelineMessages(self):
         pass
 
-    def test_WhenBobReadsAlicesTimelineMessageItDisplaysTimeSincePosted(self):
-        pass
-
-    def test_WhenBobHasPostedTwoMessagesBobReadsBobsTwoTimelineMessages(self):
-        pass
-
+    @unittest.skip("not implemented")
     def test_WhenCharlieFollowsAliceThenCharlieReadsCharlieAndAliceMessagesOnCharlieWall(self):
         pass
-
+    
+    @unittest.skip("not implemented")
     def test_WhenCharlieFollowsBobAndAliceThenCharlieReadsCharlieBobAndAliceMessagesOnCharliesWall(self):
         pass
 
+    @unittest.skip("not implemented")
     def test_WhenCharlieReadsCharliesWallBobsMessagesDisplaysTimeSincePosted(self):
         pass
     
